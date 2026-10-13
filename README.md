@@ -1,6 +1,6 @@
 # NIT Jalandhar Premier League auction
 
-A small auction board for the JPL assignment. Four team managers bid, one auctioneer accepts or rejects, and anyone else can watch. The UI is a React app with Material UI, themed as a light Bluno product (deep blue, white surfaces, Manrope). The API is FastAPI with SQLite, so rosters and budgets survive a refresh and a server restart.
+A small auction board for the JPL assignment. Four team managers bid, one auctioneer accepts or rejects, and anyone else can watch. The UI is a React app with Material UI, themed as a light Bluno product (deep blue, white surfaces, Manrope). The current round is drawn as a bar chart, one bar per team. Each roster shows a donut of the purse still left, with the amount written underneath. The API is FastAPI with SQLite, so rosters and budgets survive a refresh and a server restart.
 
 ## How to run
 
@@ -23,7 +23,9 @@ npm install
 npm run dev
 ```
 
-Open http://127.0.0.1:5173. The Vite dev server proxies `/api` to http://127.0.0.1:8000.
+Open http://localhost:5173 on the machine that is running the app. The Vite dev server listens on the local network and proxies `/api` to http://127.0.0.1:8000, so other browsers do not open the API port themselves.
+
+When Vite starts it prints a Network address, for example `http://192.168.1.81:5173/`. Friends on the same Wi-Fi open that address. Everyone must use the same running server. A second copy of the app has its own database.
 
 Tests:
 
@@ -33,6 +35,16 @@ cd backend
 ```
 
 To start from the seeded auction again, stop the API and delete `backend/jpl.db`. The next startup recreates the teams and players.
+
+## How to play
+
+1. One person starts the backend and the frontend.
+2. Each person opens the site in their own browser, or in a separate tab on one computer.
+3. On the first screen, pick a seat. Use one auctioneer, one manager for each of the four teams, and spectators for anyone else. The choice is saved in that browser only. Switch role clears it.
+4. The auctioneer starts one available player. Managers place bids. The auctioneer accepts the highest bid or rejects the round.
+5. The board refreshes about every 1.5 seconds, so every browser shows the same player, bids, rosters, and remaining budgets.
+
+The bar chart lists every team for the player currently on the block. Bar length is that team's highest bid this round. A team that has not bid is labeled "No bid". The donut on a roster is blue for the purse still left and gray for the amount already spent. The caption under it reads like "₹900 left of ₹1,000".
 
 ## Budgets and bid rules
 
@@ -189,10 +201,10 @@ Rejected rounds set `voided` to true. Those rows stay in the table and are ignor
 
 ## Screenshots
 
-Auction board:
+Auction board, with the current round as a bar chart:
 
 ![Auction board](screenshots/auction-board.png)
 
-A roster after an accepted bid:
+Rosters, with the remaining purse on each donut:
 
 ![Roster](screenshots/roster.png)
