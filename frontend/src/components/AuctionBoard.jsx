@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { acceptBid, placeBid, rejectRound, startAuction } from "../api";
 import { rupees, skillLabel } from "../format";
+import BidChart from "./BidChart";
 
 function nextMinimum(player, bids) {
   const highest = bids.reduce((max, bid) => Math.max(max, bid.amount), 0);
@@ -104,18 +105,16 @@ export default function AuctionBoard({ role, state, onState, onSwitchRole }) {
                   </Box>
                 </Stack>
                 <Divider />
-                {state.bids.length === 0 ? (
-                  <Typography color="text.secondary">Waiting for the first bid above the base price.</Typography>
-                ) : (
-                  <Stack spacing={1}>
-                    {state.bids.map((bid) => (
-                      <Stack key={bid.id} direction="row" sx={{ justifyContent: "space-between" }}>
-                        <Typography>{bid.team_name}</Typography>
-                        <Typography fontWeight={700}>{rupees(bid.amount)}</Typography>
-                      </Stack>
-                    ))}
-                  </Stack>
-                )}
+                <Box>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    Bids this round
+                  </Typography>
+                  {state.bids.length === 0 ? (
+                    <Typography color="text.secondary">Waiting for the first bid above the base price.</Typography>
+                  ) : (
+                    <BidChart teams={state.teams} bids={state.bids} />
+                  )}
+                </Box>
 
                 {role.kind === "manager" && managerTeam ? (
                   <Stack spacing={1.5}>
