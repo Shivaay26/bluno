@@ -13,6 +13,7 @@ import {
 import { acceptBid, placeBid, rejectRound, startAuction } from "../api";
 import { rupees, skillLabel } from "../format";
 import BidChart from "./BidChart";
+import BudgetPie from "./BudgetPie";
 
 function nextMinimum(player, bids) {
   const highest = bids.reduce((max, bid) => Math.max(max, bid.amount), 0);
@@ -226,9 +227,7 @@ export default function AuctionBoard({ role, state, onState, onSwitchRole }) {
           {state.teams.map((team) => (
             <Paper key={team.id} variant="outlined" sx={{ p: 2 }}>
               <Typography fontWeight={800}>{team.name}</Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
-                {rupees(team.remaining_budget)} left of {rupees(team.total_budget)}
-              </Typography>
+              <BudgetPie remaining={team.remaining_budget} total={team.total_budget} />
               {team.roster.length === 0 ? (
                 <Typography variant="body2" color="text.secondary">
                   No players yet.
